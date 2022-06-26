@@ -16,10 +16,9 @@ const Home = () => {
   
     React.useEffect(() => {
       setIsLoading(true);
-      console.log('sdf',sortTipe)
       const order = sortTipe.sortProperty.includes('-') ? 'asc' : 'desc';
       const sortBy = sortTipe.sortProperty.replace('-', '');
-      
+
       fetch(
         `https://629291fccd0c91932b73bb62.mockapi.io/items?${
           categoryId > 0 ? `category=${categoryId}` : ''
