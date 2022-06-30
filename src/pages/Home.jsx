@@ -1,53 +1,63 @@
-import React from 'react'
+import React from "react";
 
 import Categories from "../components/Categories";
 import Sort from "../components/Sort";
 import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 
-const Home = () => {
-    const [items, setItems] = React.useState([]);
-    const [isLoading, setIsLoading] = React.useState(true);
-    const [categoryId, setCategoryId] = React.useState(0)
-    const [sortTipe, setSortTipe] = React.useState({
-      name: 'популярности',
-      sortProperty: 'rating',
-    })
-  
-    React.useEffect(() => {
-      setIsLoading(true);
-      const order = sortTipe.sortProperty.includes('-') ? 'asc' : 'desc';
-      const sortBy = sortTipe.sortProperty.replace('-', '');
+const Home = ({ searchValue }) => {
+  const [items, setItems] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [categoryId, setCategoryId] = React.useState(0);
+  const [sortTipe, setSortTipe] = React.useState({
+    name: "популярности",
+    sortProperty: "rating",
+  });
 
-      fetch(
-        `https://629291fccd0c91932b73bb62.mockapi.io/items?${
-          categoryId > 0 ? `category=${categoryId}` : ''
-          }&sortBy=${sortBy}&order=${order}`
-        )
-        .then((res) => {
-          return res.json();
-        })
-        .then((arr) => {
-          setItems(arr);
-          setIsLoading(false);
-        });
-      window.scrollTo(0, 0);
-    }, [categoryId, sortTipe]);
+  React.useEffect(() => {
+    setIsLoading(true);
+    const order = sortTipe.sortProperty.includes("-") ? "asc" : "desc";
+    const sortBy = sortTipe.sortProperty.replace("-", "");
+
+    fetch(
+      `https://629291fccd0c91932b73bb62.mockapi.io/items?${
+        categoryId > 0 ? `category=${categoryId}` : ""
+      }&sortBy=${sortBy}&order=${order}`
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((arr) => {
+        setItems(arr);
+        setIsLoading(false);
+      });
+    window.scrollTo(0, 0);
+  }, [categoryId, sortTipe]);
+
+  const pizzas = items
+    .filter((obj) => {
+      if (obj.title.toLowerCase().includes(searchValue.toLowerCase())) {
+        return true;
+      }
+
+      return false;
+    })
+    .map((obj, i) => <PizzaBlock {...obj} key={i} />);
+  const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (
     <>
-        <div className="container">
+      <div className="container">
         <div className="content__top">
-        <Categories value={categoryId} onChangeCategory={(i) => setCategoryId(i)} />
-        <Sort value={sortTipe} onChangeSort={(i) => setSortTipe(i)} />
+          <Categories
+            value={categoryId}
+            onChangeCategory={(i) => setCategoryId(i)}
+          />
+          <Sort value={sortTipe} onChangeSort={(i) => setSortTipe(i)} />
         </div>
         <h2 className="content__title">Все пиццы</h2>
-        <div className="content__items">
-        {isLoading
-            ? [...new Array(6)].map((_, i) => <Skeleton key={i} />)
-            : items.map((obj, i) => <PizzaBlock {...obj} key={i} />)}
-        </div>
-        </div>
+        <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+      </div>
     </>
   );
 };
