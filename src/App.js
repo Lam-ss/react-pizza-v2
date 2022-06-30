@@ -9,9 +9,11 @@ import { Routes, Route } from "react-router-dom";
 // https://629291fccd0c91932b73bb62.mockapi.io/items
 
 function App() {
+  const [searchValue, setSearchValue] = React.useState("");
+
   return (
     <div className="wrapper">
-      <Header />
+      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
