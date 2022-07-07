@@ -18,7 +18,6 @@ const Home = () => {
   const { searchValue } = React.useContext(SearchContext);
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  // const [categoryId, setCategoryId] = React.useState(0);
   const [currentPage, setcurrentPage] = React.useState(1);
   const [sortTipe, setSortTipe] = React.useState({
     name: "популярности",
