@@ -6,22 +6,27 @@ import PizzaBlock from "../components/PizzaBlock";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Pagination from "../components/Pagination";
 import { SearchContext } from "../App";
+import { useDispatch, useSelector } from "react-redux";
+import { setCategoryId } from "../redux/slises/filterSlice";
 
 const Home = () => {
+  const dispatch = useDispatch();
+  const categoryId = useSelector((state) => state.filter.categoryId);
+  const sortTipe = useSelector((state) => state.filter.sort.sortProperty);
   const { searchValue } = React.useContext(SearchContext);
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [categoryId, setCategoryId] = React.useState(0);
   const [currentPage, setcurrentPage] = React.useState(1);
-  const [sortTipe, setSortTipe] = React.useState({
-    name: "популярности",
-    sortProperty: "rating",
-  });
+
+  const onChangeCategory = (id) => {
+    console.log(id);
+    dispatch(setCategoryId(id));
+  };
 
   React.useEffect(() => {
     setIsLoading(true);
-    const sortBy = sortTipe.sortProperty.replace("-", "");
-    const order = sortTipe.sortProperty.includes("-") ? "asc" : "desc";
+    const sortBy = sortTipe.replace("-", "");
+    const order = sortTipe.includes("-") ? "asc" : "desc";
     const category = categoryId > 0 ? `category=${categoryId}` : "";
     const search = searchValue ? `search=${searchValue}` : "";
 
@@ -45,11 +50,8 @@ const Home = () => {
     <>
       <div className="container">
         <div className="content__top">
-          <Categories
-            value={categoryId}
-            onChangeCategory={(i) => setCategoryId(i)}
-          />
-          <Sort value={sortTipe} onChangeSort={(i) => setSortTipe(i)} />
+          <Categories value={categoryId} onChangeCategory={onChangeCategory} />
+          <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">{isLoading ? skeletons : pizzas}</div>
