@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setSort } from "../redux/slises/filterSlice";
 
-const list = [
+export const sortList = [
   { name: "популярности (DESC)", sortProperty: "rating" },
   { name: "популярности (ASC)", sortProperty: "-rating" },
   { name: "цене (DESC)", sortProperty: "price" },
@@ -46,7 +46,7 @@ function Sort() {
             {/* <li className="active">популярности</li>
           <li>цене</li>
           <li>алфавиту</li> */}
-            {list.map((obj, i) => (
+            {sortList.map((obj, i) => (
               <li
                 onClick={() => onClickSelected(obj)}
                 className={
